@@ -30,7 +30,7 @@ export default {
   components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage },
   setup() {
     return {
-      person, 
+      person,
       listOutline,
       calendar,
     }

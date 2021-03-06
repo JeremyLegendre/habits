@@ -18,7 +18,14 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'account',
         name: 'MyAccount',
-        component: () => import('@/views/MyAccount.vue')
+        component: () => import('@/views/MyAccount.vue'),
+        children: [
+          {
+            path: '/account/analysis',
+            name: 'CompleteAnalysis',
+            component: () => import('@/views/AccountAnalysis.vue'),
+          },
+        ]
       },
       {
         path: 'day',

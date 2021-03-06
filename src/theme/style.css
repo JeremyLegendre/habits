@@ -1,0 +1,17 @@
+/* Pass to sass */
+.account {
+    padding: 20px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.cumulated_points > p {
+    margin: 0;
+}
+
+.cumulated_points > p:nth-child(1) {
+    font-size:  2rem;
+    margin: 30px 0 0;
+}
