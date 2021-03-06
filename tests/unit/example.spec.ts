@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
-import Tab1 from '@/views/Tab1.vue'
+import MyAccount from '@/views/MyAccount.vue'
 
-describe('Tab1.vue', () => {
-  it('renders tab 1 view', () => {
-    const wrapper = mount(Tab1)
-    expect(wrapper.text()).toMatch('Tab 1 page')
+describe('MyAccount.vue', () => {
+  it('renders account view', () => {
+    const wrapper = mount(MyAccount)
+    expect(wrapper.text()).toMatch('My account page')
   })
 })
