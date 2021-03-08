@@ -1,11 +1,14 @@
 /* Pass to sass */
+.my_account {
+    text-align: center;
+}
+
 .account {
     padding: 20px;
     flex-direction: column;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
 }
 .cumulated_points > p {
     margin: 0;

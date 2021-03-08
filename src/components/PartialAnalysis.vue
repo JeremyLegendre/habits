@@ -26,13 +26,24 @@ export default defineComponent({
         moreDataAnalysis() {
             this.$router.push({name: 'CompleteAnalysis'})
         },
-        getWeeksData() {
-            this.prevWeek = {};
-            this.currentWeek = {};
+        getWeeksData(userId: number) {
+            // TODO: service request from userId
+            if (userId) {
+                this.prevWeek = {
+                    date: new Date(),
+                    userId: userId,
+                    activities: []
+                };
+                this.currentWeek = {
+                    date: new Date(),
+                    userId: userId,
+                    activities: []
+                };
+            }
         }
     },
     mounted() {
-        this.getWeeksData();
+        this.getWeeksData(this.userId);
     }
 })
 </script>

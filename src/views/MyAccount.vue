@@ -2,7 +2,7 @@
   <ion-page class="my_account">
     <ion-header>
       <ion-toolbar>
-        <ion-title> {{ account.name }} </ion-title>
+        <ion-title> Mon compte </ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
