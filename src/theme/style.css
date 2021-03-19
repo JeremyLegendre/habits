@@ -40,12 +40,29 @@
 .today-objectives .program {
     display: flex;
     flex-direction: row;
+    align-items: center;
     height: 35px;
     margin: 10px 0 10px 20px;
 }
 
 .today-objectives .program span {
     width: 15%;
+}
+
+.today-objectives .program .cultural {
+    color: var(--ion-color-success-shade);
+}
+
+.today-objectives .program .sports {
+    color: var(--ion-color-danger-shade);
+}
+
+.today-objectives .program .leisure {
+    color: var(--ion-color-primary);
+}
+
+.today-objectives .program .work {
+    color: var(--ion-color-primary);
 }
 
 .today-objectives .empty-objectives {
@@ -60,4 +77,8 @@
 
 .svg-inline--fa {
     font-size: 25px;
+}
+
+.fa-dumbbell {
+    transform: translateX(-3px) rotate(45deg);
 }

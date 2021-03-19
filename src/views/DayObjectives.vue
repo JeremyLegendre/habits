@@ -17,7 +17,7 @@
       <ion-list v-if="activities">
         <div class="objective" v-for="activity in activities" :key="activity.id">
           <div class="hour"> {{ activity.date }}</div>
-          <div class="program"><span> {{ activity.parent }} </span> {{ activity.name }}</div>
+          <div class="program"> <objective-icon :icon="activity.icon" :type="activity.parent"/>  {{ activity.name }}</div>
         </div>
       </ion-list>
       <div v-else class="empty-objectives">
@@ -33,6 +33,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList } from '@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMugHot } from '@fortawesome/free-solid-svg-icons';
+import ObjectiveIcon from '@/components/ObjectiveIcon.vue';
 
 library.add(faMugHot);
 
@@ -40,6 +41,8 @@ interface State {
   today: string;
   activities: [{
     id: number;
+    parent: number;
+    icon: string;
     name: string;
     date: string;
     plannedTime: number;
@@ -49,8 +52,9 @@ interface State {
 
 export default  {
   name: 'DayObjectives',
-  components: { IonPage, FontAwesomeIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonList },
-  data: (): State => {
+  components: { IonPage, FontAwesomeIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonList, ObjectiveIcon },
+  data: (): State =>
+  {
     return {
       today: new Date().toLocaleDateString('fr', {
         weekday: 'long',
@@ -67,8 +71,9 @@ export default  {
       const data = {
         response: [
           {
-            id: 1,
+            id: 0,
             parent: 0,
+            icon: "book",
             name: "Lecture Nietzsche",
             date: new Date(2021, 2, 16, 8, 0, 0),
             plannedTime: 3600000,
@@ -77,6 +82,7 @@ export default  {
           {
             id: 3,
             parent: 1,
+            icon: "dumbbell",
             name: "Musculation Abdos",
             date: new Date(2021, 2, 16, 10, 30, 0),
             plannedTime: 1800000,
@@ -89,6 +95,7 @@ export default  {
         const newVal: any = {
           id: value.id,
           parent: value.parent,
+          icon: value.icon,
           name: value.name,
           plannedTime: value.plannedTime,
           passedTime: value.passedTime,
@@ -105,7 +112,6 @@ export default  {
     },
     getActivities(): void {
       this.activities = this.getDayOfWeek();
-      this.activities = null;
     }
   },
   mounted() {
