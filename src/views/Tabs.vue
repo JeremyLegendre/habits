@@ -3,17 +3,17 @@
     <ion-tabs>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="account" href="/tabs/account">
-          <ion-icon :icon="person" />
+          <font-awesome-icon icon="user-circle" />
           <ion-label>Mon compte</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="day" href="/tabs/day">
-          <ion-icon :icon="listOutline"></ion-icon>
+          <font-awesome-icon icon="list"/>
           <ion-label>Objectif du jour</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="plan" href="/tabs/plan">
-          <ion-icon :icon="calendar" />
+          <font-awesome-icon icon="calendar-week" />
           <ion-label>Planifier</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
@@ -22,18 +22,15 @@
 </template>
 
 <script lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage } from '@ionic/vue';
-import { person, listOutline, calendar } from 'ionicons/icons';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonPage } from '@ionic/vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faUserCircle, faCalendarWeek, faList } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faUserCircle, faCalendarWeek, faList);
 
 export default {
   name: 'Tabs',
-  components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage },
-  setup() {
-    return {
-      person,
-      listOutline,
-      calendar,
-    }
-  }
+  components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonPage, FontAwesomeIcon },
 }
 </script>

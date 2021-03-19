@@ -21,7 +21,7 @@
         </div>
       </ion-list>
       <div v-else class="empty-objectives">
-        <ion-icon :icon="cafe" />
+        <font-awesome-icon icon="mug-hot" />
         <p>Vous n'avez pas d'objectifs pour aujourd'hui...</p>
       </div>
     </ion-content>
@@ -29,8 +29,12 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonList } from '@ionic/vue';
-import { cafe } from 'ionicons/icons';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList } from '@ionic/vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faMugHot } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faMugHot);
 
 interface State {
   today: string;
@@ -45,7 +49,7 @@ interface State {
 
 export default  {
   name: 'DayObjectives',
-  components: { IonPage, IonIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonList },
+  components: { IonPage, FontAwesomeIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonList },
   data: (): State => {
     return {
       today: new Date().toLocaleDateString('fr', {
@@ -55,11 +59,6 @@ export default  {
         year: 'numeric'
       }).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()),
       activities: null,
-    }
-  },
-  setup() {
-    return {
-      cafe
     }
   },
   methods: {
@@ -106,6 +105,7 @@ export default  {
     },
     getActivities(): void {
       this.activities = this.getDayOfWeek();
+      this.activities = null;
     }
   },
   mounted() {

@@ -53,6 +53,11 @@
     margin-top: 200px;
 }
 
-.empty-objectives > ion-icon {
-    font-size: xx-large;
+.empty-objectives > svg {
+    font-size: 60px;
+    color: antiquewhite;
+}
+
+.svg-inline--fa {
+    font-size: 25px;
 }
