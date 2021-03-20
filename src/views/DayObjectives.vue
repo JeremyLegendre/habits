@@ -15,9 +15,26 @@
         {{today}}
       </div>
       <ion-list v-if="activities">
-        <div class="objective" v-for="activity in activities" :key="activity.id">
-          <div class="hour"> {{ activity.date }}</div>
-          <div class="program"> <objective-icon :icon="activity.icon" :type="activity.parent"/>  {{ activity.name }}</div>
+        <div class="objective" v-for="(activity, index) in activities" :key="activity.id">
+          <div class="hour"> {{ activity.date }} - {{ activity.endDate }}</div>
+          <div class="program">
+            <objective-icon :icon="activity.icon" :type="activity.parent"/>
+            <p> {{ activity.name }} </p>
+            <ion-fab horizontal="end" :class="{'inactive': activity.passedTime == activity.plannedTime}">
+              <ion-fab-button size="small" :color="getBtnColorFromActivity(activity)">
+                <font-awesome-icon :icon="getIconfromActivity(activity)"></font-awesome-icon>
+              </ion-fab-button>
+              <ion-fab-list side="top">
+                <ion-fab-button @click="startTime(index)"><font-awesome-icon icon="hourglass-start"></font-awesome-icon></ion-fab-button>
+              </ion-fab-list>
+              <ion-fab-list side="bottom">
+                <ion-fab-button @click="endActivity(index)"><font-awesome-icon icon="hourglass-end"></font-awesome-icon></ion-fab-button>
+              </ion-fab-list>
+              <ion-fab-list side="start">
+                <ion-fab-button @click="setTime(index)"><font-awesome-icon icon="hourglass-half"></font-awesome-icon></ion-fab-button>
+              </ion-fab-list>
+            </ion-fab>
+          </div>
         </div>
       </ion-list>
       <div v-else class="empty-objectives">
@@ -29,13 +46,13 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList } from '@ionic/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMugHot } from '@fortawesome/free-solid-svg-icons';
+import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
 import ObjectiveIcon from '@/components/ObjectiveIcon.vue';
 
-library.add(faMugHot);
+library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd);
 
 interface State {
   today: string;
@@ -45,6 +62,7 @@ interface State {
     icon: string;
     name: string;
     date: string;
+    endDate: string;
     plannedTime: number;
     passedTime: number;
   }] | null;
@@ -52,7 +70,7 @@ interface State {
 
 export default  {
   name: 'DayObjectives',
-  components: { IonPage, FontAwesomeIcon, IonHeader, IonToolbar, IonTitle, IonContent, IonList, ObjectiveIcon },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, FontAwesomeIcon, ObjectiveIcon },
   data: (): State =>
   {
     return {
@@ -77,7 +95,7 @@ export default  {
             name: "Lecture Nietzsche",
             date: new Date(2021, 2, 16, 8, 0, 0),
             plannedTime: 3600000,
-            passedTime: 0
+            passedTime: 3600000
           },
           {
             id: 3,
@@ -105,6 +123,11 @@ export default  {
         const minutes = value.date.getMinutes() < 10 ? "0" + value.date.getMinutes() : value.date.getMinutes() ;
         newVal.date = hour + "H" + minutes;
 
+        const endDate = new Date(value.date.getTime() + value.plannedTime);
+        const endhour = endDate.getHours() < 10 ? "0" + endDate.getHours() : endDate.getHours();
+        const endminutes = endDate.getMinutes() < 10 ? "0" + endDate.getMinutes() : endDate.getMinutes() ;
+        newVal.endDate = endhour + "H" + endminutes;
+
         return newVal;
       });
 
@@ -112,6 +135,35 @@ export default  {
     },
     getActivities(): void {
       this.activities = this.getDayOfWeek();
+      console.log(this.activities)
+    },
+    getIconfromActivity(activity) {
+      let icon = "";
+
+      // ! When changing activity passed time, icon isn't updated on front ??
+
+      if (activity.passedTime == 0) {
+        icon = "hourglass-start";
+      } else if (activity.passedTime == activity.plannedTime) {
+        icon = "hourglass-end";
+      } else {
+        icon = "hourglass-half";
+      }
+
+      return icon;
+    },
+    getBtnColorFromActivity(activity) {
+      return activity.passedTime == activity.plannedTime ? "medium" : "primary";
+    },
+    startTime(index) {
+      // TODO: activate chrono
+    },
+    setTime(index) {
+      // TODO: open modal where editing time passed on activity
+    },
+    endActivity(index) {
+      // TODO: send info to api + add points to user
+      this.activities[index].passedTime = this.activities[index].plannedTime;
     }
   },
   mounted() {
