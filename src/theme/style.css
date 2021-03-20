@@ -49,6 +49,13 @@
     width: 15%;
 }
 
+.today-objectives .program p {
+    padding: 5px;
+    width: 200px;
+    border-radius: 5px;
+    text-align: center;
+}
+
 .today-objectives .program .cultural {
     color: var(--ion-color-success-shade);
 }
@@ -62,7 +69,7 @@
 }
 
 .today-objectives .program .work {
-    color: var(--ion-color-primary);
+    color: var(--ion-color-tertiary);
 }
 
 .today-objectives .empty-objectives {

@@ -135,7 +135,6 @@ export default  {
     },
     getActivities(): void {
       this.activities = this.getDayOfWeek();
-      console.log(this.activities)
     },
     getIconfromActivity(activity) {
       let icon = "";

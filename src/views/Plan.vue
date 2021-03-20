@@ -11,7 +11,7 @@
           <ion-title size="large">Plan next Week</ion-title>
         </ion-toolbar>
       </ion-header>
-      
+
       <ExploreContainer name="Plan next Week" />
     </ion-content>
   </ion-page>

@@ -20,6 +20,15 @@
           <p>Points cumulés</p>
         </div>
       </ion-card>
+      <ion-card class="analytics">
+        Analytics
+      </ion-card>
+      <ion-card class="classment">
+        Classment
+      </ion-card>
+      <ion-card class="achievements">
+        Achievements
+      </ion-card>
       <partial-analysis :userId="account.userId"></partial-analysis>
     </ion-content>
   </ion-page>
