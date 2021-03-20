@@ -1,6 +1,6 @@
 <template>
     <div class="chronometer">
-        <p> {{ activity.name }} </p>
+        <div> {{ activity.name }} </div>
         <div class="time">
             <span class="hour"> {{ hours }} h </span>
             <span class="minutes"> {{ minutes }} min </span>
@@ -8,20 +8,24 @@
             <span class="mseconds"> {{ mseconds }}</span>
         </div>
         <div class="actions">
-            <ion-button @click="startTime"> Start </ion-button>
-            <ion-button @click="stopTime"> Stop </ion-button>
-            <ion-button @click="resetTime"> Reset </ion-button>
-            <ion-button @click="saveTime"> Save </ion-button>
+            <font-awesome-icon @click="resetTime" icon="undo"> Reset </font-awesome-icon>
+            <font-awesome-icon @click="startTime" v-if="state == 'stop'" icon="play"> Start </font-awesome-icon>
+            <font-awesome-icon @click="stopTime" v-else icon="pause"> Stop </font-awesome-icon>
+            <font-awesome-icon @click="saveTime" icon="check"> Save </font-awesome-icon>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import {IonButton} from '@ionic/vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPlay, faPause, faUndo, faCheck } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faPlay, faPause, faUndo, faCheck);
 
 export default {
     name: 'Chronometer',
-    components: {IonButton},
+    components: {FontAwesomeIcon},
     props: {
         activity: {
             type: Object,
@@ -30,6 +34,7 @@ export default {
     },
     data() {
         return {
+            state: 'stop',
             timer: null,
             hours: 0,
             minutes: 0,
@@ -40,6 +45,7 @@ export default {
     methods: {
         startTime(){
             this.timer = setInterval((function() {
+                this.state = 'start';
                 this.updateTime()
             }).bind(this), 100);
         },
@@ -66,6 +72,7 @@ export default {
             }
         },
         stopTime(){
+            this.state = 'stop';
             clearInterval(this.timer);
         },
         resetTime(){
@@ -94,8 +101,31 @@ export default {
 .chronometer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin: auto;
+    height: 150px;
+    min-width: 200px;
+}
+
+.chronometer .time {
+    font-size: x-large;
+}
+
+.chronometer .actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.chronometer .actions svg{
+    font-size: 30px;
+}
+
+.actions > svg:first-child {
+    color: var(--ion-color-danger);
+}
+
+.actions > svg:last-child {
+    color: var(--ion-color-success);
 }
 </style>

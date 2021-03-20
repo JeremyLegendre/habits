@@ -168,11 +168,9 @@ export default  {
       this.setOpen(true);
     },
     setTime(index): void {
-      // TODO: open modal where editing time passed on activity
       this.activities[index].passedTime += 1;
     },
     endActivity(index): void {
-      // TODO: send info to api + add points to user
       this.activities[index].passedTime = this.activities[index].plannedTime;
     },
     saveAndClose(data): void {
