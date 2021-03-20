@@ -24,82 +24,10 @@
     margin: 30px 0 0;
 }
 
-.today-objectives .date {
-    margin: 20px auto;
-    width: fit-content;
-}
-
-.today-objectives .hour {
-    display: inline-block;
-}
-
-.today-objectives .objective {
-    margin: 60px 10px;
-}
-
-.today-objectives .program {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 35px;
-    margin: 10px 0 10px 20px;
-}
-
-.today-objectives .program span {
-    width: 15%;
-}
-
-.today-objectives .program p {
-    padding: 5px;
-    width: 200px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.today-objectives .program .cultural {
-    color: var(--ion-color-success-shade);
-}
-
-.today-objectives .program .sports {
-    color: var(--ion-color-danger-shade);
-}
-
-.today-objectives .program .leisure {
-    color: var(--ion-color-primary);
-}
-
-.today-objectives .program .work {
-    color: var(--ion-color-tertiary);
-}
-
-.today-objectives .empty-objectives {
-    text-align: center;
-    margin-top: 200px;
-}
-
-.empty-objectives > svg {
-    font-size: 60px;
-    color: antiquewhite;
-}
-
 .svg-inline--fa {
     font-size: 25px;
 }
 
 .fa-dumbbell {
     transform: translateX(-3px) rotate(45deg);
-}
-
-
-ion-fab.inactive {
-    pointer-events: none;
-    cursor: not-allowed;
-}
-
-:host(ion-fab-button.small) {
-    background: red;
-}
-
-ion-fab-list {
-    z-index: 2;
 }

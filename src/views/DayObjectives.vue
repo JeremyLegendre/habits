@@ -20,12 +20,14 @@
           <div class="program">
             <objective-icon :icon="activity.icon" :type="activity.parent"/>
             <p> {{ activity.name }} </p>
-            <ion-fab horizontal="end" :class="{'inactive': activity.passedTime == activity.plannedTime}">
+            <ion-fab horizontal="end" :class="{'inactive': activity.passedTime >= activity.plannedTime}">
               <ion-fab-button size="small" :color="getBtnColorFromActivity(activity)">
                 <font-awesome-icon :icon="getIconfromActivity(activity)"></font-awesome-icon>
               </ion-fab-button>
               <ion-fab-list side="top">
-                <ion-fab-button @click="startTime(index)"><font-awesome-icon icon="hourglass-start"></font-awesome-icon></ion-fab-button>
+                <ion-fab-button @click="startTime(activity)">
+                  <font-awesome-icon icon="hourglass-start" />
+                </ion-fab-button>
               </ion-fab-list>
               <ion-fab-list side="bottom">
                 <ion-fab-button @click="endActivity(index)"><font-awesome-icon icon="hourglass-end"></font-awesome-icon></ion-fab-button>
@@ -41,16 +43,23 @@
         <font-awesome-icon icon="mug-hot" />
         <p>Vous n'avez pas d'objectifs pour aujourd'hui...</p>
       </div>
+      <ion-modal
+         :is-open="isOpenRef"
+      >
+        <chronometer @onSave="saveAndClose($event)" :activity="chosenActivity"></chronometer>
+      </ion-modal>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList } from '@ionic/vue';
+import { ref } from 'vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, IonModal } from '@ionic/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
 import ObjectiveIcon from '@/components/ObjectiveIcon.vue';
+import Chronometer from '@/components/Chronometer.vue';
 
 library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd);
 
@@ -66,11 +75,12 @@ interface State {
     plannedTime: number;
     passedTime: number;
   }] | null;
+  chosenActivity: any;
 }
 
 export default  {
   name: 'DayObjectives',
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, FontAwesomeIcon, ObjectiveIcon },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, IonModal, FontAwesomeIcon, ObjectiveIcon, Chronometer },
   data: (): State =>
   {
     return {
@@ -81,6 +91,7 @@ export default  {
         year: 'numeric'
       }).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()),
       activities: null,
+      chosenActivity: null,
     }
   },
   methods: {
@@ -136,14 +147,12 @@ export default  {
     getActivities(): void {
       this.activities = this.getDayOfWeek();
     },
-    getIconfromActivity(activity) {
+    getIconfromActivity(activity): string {
       let icon = "";
-
-      // ! When changing activity passed time, icon isn't updated on front ??
 
       if (activity.passedTime == 0) {
         icon = "hourglass-start";
-      } else if (activity.passedTime == activity.plannedTime) {
+      } else if (activity.passedTime >= activity.plannedTime) {
         icon = "hourglass-end";
       } else {
         icon = "hourglass-half";
@@ -151,22 +160,104 @@ export default  {
 
       return icon;
     },
-    getBtnColorFromActivity(activity) {
+    getBtnColorFromActivity(activity): string {
       return activity.passedTime == activity.plannedTime ? "medium" : "primary";
     },
-    startTime(index) {
-      // TODO: activate chrono
+    startTime(activity): void {
+      this.chosenActivity = activity;
+      this.setOpen(true);
     },
-    setTime(index) {
+    setTime(index): void {
       // TODO: open modal where editing time passed on activity
+      this.activities[index].passedTime += 1;
     },
-    endActivity(index) {
+    endActivity(index): void {
       // TODO: send info to api + add points to user
       this.activities[index].passedTime = this.activities[index].plannedTime;
+    },
+    saveAndClose(data): void {
+      for (const index in this.activities) {
+        if (this.activities[index].id == data.activity.id) {
+          this.activities[index].passedTime += data.time;
+        }
+      }
+
+      this.setOpen(false);
     }
   },
   mounted() {
     this.getActivities();
+  },
+  setup() {
+    const isOpenRef = ref(false);
+    const setOpen = (state: boolean) => isOpenRef.value = state;
+    return { isOpenRef, setOpen }
   }
 }
 </script>
+
+<style scoped>
+
+.today-objectives .date {
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.today-objectives .hour {
+    display: inline-block;
+}
+
+.today-objectives .objective {
+    margin: 60px 10px;
+}
+
+.today-objectives .program {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+    margin: 10px 0 10px 20px;
+}
+
+.today-objectives .program span {
+    width: 15%;
+}
+
+.today-objectives .program p {
+    padding: 5px;
+    width: 200px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.today-objectives .program .cultural {
+    color: var(--ion-color-success-shade);
+}
+
+.today-objectives .program .sports {
+    color: var(--ion-color-danger-shade);
+}
+
+.today-objectives .program .leisure {
+    color: var(--ion-color-primary);
+}
+
+.today-objectives .program .work {
+    color: var(--ion-color-tertiary);
+}
+
+.today-objectives .empty-objectives {
+    text-align: center;
+    margin-top: 200px;
+}
+
+.empty-objectives > svg {
+    font-size: 60px;
+    color: antiquewhite;
+}
+
+ion-fab.inactive {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+</style>
