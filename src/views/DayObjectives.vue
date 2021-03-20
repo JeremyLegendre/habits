@@ -100,15 +100,6 @@ export default  {
       const data = {
         response: [
           {
-            id: 0,
-            parent: 0,
-            icon: "book",
-            name: "Lecture Nietzsche",
-            date: new Date(2021, 2, 16, 8, 0, 0),
-            plannedTime: 3600000,
-            passedTime: 3600000
-          },
-          {
             id: 3,
             parent: 1,
             icon: "dumbbell",
@@ -116,9 +107,31 @@ export default  {
             date: new Date(2021, 2, 16, 10, 30, 0),
             plannedTime: 1800000,
             passedTime: 0
+          },
+                    {
+            id: 2,
+            parent: 0,
+            icon: "book",
+            name: "Lecture Isaac Asimov",
+            date: new Date(2021, 2, 16, 16, 0, 0),
+            plannedTime: 900000,
+            passedTime: 0
+          },
+          {
+            id: 0,
+            parent: 0,
+            icon: "book",
+            name: "Lecture Nietzsche",
+            date: new Date(2021, 2, 16, 8, 0, 0),
+            plannedTime: 3600000,
+            passedTime: 3600000
           }
         ]
       };
+
+      data.response = data.response.sort((a, b) => {
+        return a.date.getTime() - b.date.getTime();
+      });
 
       const response = data.response.map((value) => {
         const newVal: any = {
@@ -213,7 +226,6 @@ export default  {
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 35px;
     margin: 10px 0 10px 20px;
 }
 
@@ -223,9 +235,9 @@ export default  {
 
 .today-objectives .program p {
     padding: 5px;
-    width: 200px;
+    width: 225px;
     border-radius: 5px;
-    text-align: center;
+    text-align: center;overflow: hidden;
 }
 
 .today-objectives .program .cultural {
