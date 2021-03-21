@@ -44,9 +44,10 @@
         <p>Vous n'avez pas d'objectifs pour aujourd'hui...</p>
       </div>
       <ion-modal
-         :is-open="isOpenRef"
+        :is-open="isOpenRef"
       >
-        <chronometer @onSave="saveAndClose($event)" :activity="chosenActivity"></chronometer>
+        <chronometer v-if="modal == 'chrono'" @onSave="saveAndClose($event)" :activity="chosenActivity"></chronometer>
+        <edit-time v-else @onSave="saveAndClose($event)" :activity="chosenActivity"></edit-time>
       </ion-modal>
     </ion-content>
   </ion-page>
@@ -60,6 +61,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
 import ObjectiveIcon from '@/components/ObjectiveIcon.vue';
 import Chronometer from '@/components/Chronometer.vue';
+import EditTime from '@/components/EditTime.vue';
 
 library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd);
 
@@ -76,11 +78,12 @@ interface State {
     passedTime: number;
   }] | null;
   chosenActivity: any;
+  modal: string;
 }
 
 export default  {
   name: 'DayObjectives',
-  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, IonModal, FontAwesomeIcon, ObjectiveIcon, Chronometer },
+  components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, IonModal, FontAwesomeIcon, ObjectiveIcon, Chronometer, EditTime },
   data: (): State =>
   {
     return {
@@ -92,6 +95,7 @@ export default  {
       }).replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()),
       activities: null,
       chosenActivity: null,
+      modal: "chrono"
     }
   },
   methods: {
@@ -174,14 +178,17 @@ export default  {
       return icon;
     },
     getBtnColorFromActivity(activity): string {
-      return activity.passedTime == activity.plannedTime ? "medium" : "primary";
+      return activity.passedTime >= activity.plannedTime ? "medium" : "primary";
     },
     startTime(activity): void {
+      this.modal = "chrono";
       this.chosenActivity = activity;
       this.setOpen(true);
     },
     setTime(index): void {
-      this.activities[index].passedTime += 1;
+      this.modal = "edit-time";
+      this.chosenActivity = this.activities[index];
+      this.setOpen(true);
     },
     endActivity(index): void {
       this.activities[index].passedTime = this.activities[index].plannedTime;
@@ -192,8 +199,8 @@ export default  {
           this.activities[index].passedTime += data.time;
         }
       }
-
       this.setOpen(false);
+      this.modal = "";
     }
   },
   mounted() {
@@ -201,7 +208,7 @@ export default  {
   },
   setup() {
     const isOpenRef = ref(false);
-    const setOpen = (state: boolean) => isOpenRef.value = state;
+    const setOpen = (state: boolean) => { isOpenRef.value = state };
     return { isOpenRef, setOpen }
   }
 }
