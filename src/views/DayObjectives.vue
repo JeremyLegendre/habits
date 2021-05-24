@@ -22,7 +22,9 @@
             <p> {{ activity.name }} </p>
             <ion-fab horizontal="end" :class="{'inactive': activity.passedTime >= activity.plannedTime}">
               <ion-fab-button size="small" :color="getBtnColorFromActivity(activity)">
-                <font-awesome-icon :icon="getIconfromActivity(activity)"></font-awesome-icon>
+                <font-awesome-icon v-if="isCorrectIcon(activity, 'start')" icon="hourglass-start"></font-awesome-icon>
+                <font-awesome-icon v-if="isCorrectIcon(activity, 'end')" icon="hourglass-end"></font-awesome-icon>
+                <font-awesome-icon v-if="isCorrectIcon(activity, 'half')" icon="hourglass-half"></font-awesome-icon>
               </ion-fab-button>
               <ion-fab-list side="top">
                 <ion-fab-button @click="startTime(activity)">
@@ -164,18 +166,18 @@ export default  {
     getActivities(): void {
       this.activities = this.getDayOfWeek();
     },
-    getIconfromActivity(activity): string {
-      let icon = "";
+    isCorrectIcon(activity, type): boolean {
+      let isCorrectIcon = false;
 
-      if (activity.passedTime == 0) {
-        icon = "hourglass-start";
-      } else if (activity.passedTime >= activity.plannedTime) {
-        icon = "hourglass-end";
-      } else {
-        icon = "hourglass-half";
+      if (activity.passedTime == 0 && type == 'start') {
+        isCorrectIcon = true;
+      } else if (activity.passedTime >= activity.plannedTime && type == 'end') {
+        isCorrectIcon = true;
+      } else if (activity.passedTime > 0 && activity.passedTime < activity.plannedTime && type == 'half') {
+        isCorrectIcon = true;
       }
 
-      return icon;
+      return isCorrectIcon;
     },
     getBtnColorFromActivity(activity): string {
       return activity.passedTime >= activity.plannedTime ? "medium" : "primary";
