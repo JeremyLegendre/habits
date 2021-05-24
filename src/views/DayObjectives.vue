@@ -48,8 +48,8 @@
       <ion-modal
         :is-open="isOpenRef"
       >
-        <chronometer v-if="modal == 'chrono'" @onSave="saveAndClose($event)" :activity="chosenActivity"></chronometer>
-        <edit-time v-else @onSave="saveAndClose($event)" :activity="chosenActivity"></edit-time>
+        <chronometer v-if="modal == 'chrono'" @onSave="saveAndClose($event)" @closeModal="closeModal" :activity="chosenActivity"></chronometer>
+        <edit-time v-else @onSave="saveAndClose($event)" @closeModal="closeModal" :activity="chosenActivity"></edit-time>
       </ion-modal>
     </ion-content>
   </ion-page>
@@ -60,12 +60,12 @@ import { ref } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, IonModal } from '@ionic/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
+import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ObjectiveIcon from '@/components/ObjectiveIcon.vue';
 import Chronometer from '@/components/Chronometer.vue';
 import EditTime from '@/components/EditTime.vue';
 
-library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd);
+library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd, faTimes);
 
 interface State {
   today: string;
@@ -194,6 +194,10 @@ export default  {
     },
     endActivity(index): void {
       this.activities[index].passedTime = this.activities[index].plannedTime;
+    },
+    closeModal(): void {
+      this.setOpen(false);
+      this.modal = "";
     },
     saveAndClose(data): void {
       for (const index in this.activities) {

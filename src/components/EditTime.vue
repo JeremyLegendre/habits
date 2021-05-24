@@ -1,5 +1,6 @@
 <template>
     <div class="timer">
+        <font-awesome-icon class="close-modal" @click="$emit('closeModal')" icon="times" />
         <div> {{ activity.name }} </div>
         <div class="inputs">
             <ion-item>
@@ -29,9 +30,9 @@
 import { IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faCheck);
+library.add(faCheck, faTimes);
 
 
 export default {
@@ -82,5 +83,12 @@ export default {
 
 svg {
     color: var(--ion-color-success);
+}
+
+.close-modal {
+    color: black;
+    position: absolute;
+    top: 15px;
+    right: 15px;
 }
 </style>
