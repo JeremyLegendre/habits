@@ -22,7 +22,9 @@
             <p> {{ activity.name }} </p>
             <ion-fab horizontal="end" :class="{'inactive': activity.passedTime >= activity.plannedTime}">
               <ion-fab-button size="small" :color="getBtnColorFromActivity(activity)">
-                <font-awesome-icon :icon="getIconfromActivity(activity)"></font-awesome-icon>
+                <font-awesome-icon v-if="isCorrectIcon(activity, 'start')" icon="hourglass-start"></font-awesome-icon>
+                <font-awesome-icon v-if="isCorrectIcon(activity, 'end')" icon="hourglass-end"></font-awesome-icon>
+                <font-awesome-icon v-if="isCorrectIcon(activity, 'half')" icon="hourglass-half"></font-awesome-icon>
               </ion-fab-button>
               <ion-fab-list side="top">
                 <ion-fab-button @click="startTime(activity)">
@@ -46,8 +48,8 @@
       <ion-modal
         :is-open="isOpenRef"
       >
-        <chronometer v-if="modal == 'chrono'" @onSave="saveAndClose($event)" :activity="chosenActivity"></chronometer>
-        <edit-time v-else @onSave="saveAndClose($event)" :activity="chosenActivity"></edit-time>
+        <chronometer v-if="modal == 'chrono'" @onSave="saveAndClose($event)" @closeModal="closeModal" :activity="chosenActivity"></chronometer>
+        <edit-time v-else @onSave="saveAndClose($event)" @closeModal="closeModal" :activity="chosenActivity"></edit-time>
       </ion-modal>
     </ion-content>
   </ion-page>
@@ -58,12 +60,12 @@ import { ref } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonFab, IonFabButton, IonFabList, IonModal } from '@ionic/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd } from '@fortawesome/free-solid-svg-icons';
+import { faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ObjectiveIcon from '@/components/ObjectiveIcon.vue';
 import Chronometer from '@/components/Chronometer.vue';
 import EditTime from '@/components/EditTime.vue';
 
-library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd);
+library.add(faMugHot, faHourglass, faHourglassHalf, faHourglassStart, faHourglassEnd, faTimes);
 
 interface State {
   today: string;
@@ -164,18 +166,18 @@ export default  {
     getActivities(): void {
       this.activities = this.getDayOfWeek();
     },
-    getIconfromActivity(activity): string {
-      let icon = "";
+    isCorrectIcon(activity, type): boolean {
+      let isCorrectIcon = false;
 
-      if (activity.passedTime == 0) {
-        icon = "hourglass-start";
-      } else if (activity.passedTime >= activity.plannedTime) {
-        icon = "hourglass-end";
-      } else {
-        icon = "hourglass-half";
+      if (activity.passedTime == 0 && type == 'start') {
+        isCorrectIcon = true;
+      } else if (activity.passedTime >= activity.plannedTime && type == 'end') {
+        isCorrectIcon = true;
+      } else if (activity.passedTime > 0 && activity.passedTime < activity.plannedTime && type == 'half') {
+        isCorrectIcon = true;
       }
 
-      return icon;
+      return isCorrectIcon;
     },
     getBtnColorFromActivity(activity): string {
       return activity.passedTime >= activity.plannedTime ? "medium" : "primary";
@@ -192,6 +194,10 @@ export default  {
     },
     endActivity(index): void {
       this.activities[index].passedTime = this.activities[index].plannedTime;
+    },
+    closeModal(): void {
+      this.setOpen(false);
+      this.modal = "";
     },
     saveAndClose(data): void {
       for (const index in this.activities) {

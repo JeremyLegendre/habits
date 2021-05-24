@@ -1,5 +1,6 @@
 <template>
     <div class="chronometer">
+        <font-awesome-icon class="close-modal" @click="$emit('closeModal')" icon="times" />
         <div> {{ activity.name }} </div>
         <div class="time">
             <span class="hour"> {{ hours }} h </span>
@@ -19,9 +20,9 @@
 <script lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlay, faPause, faUndo, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faUndo, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faPlay, faPause, faUndo, faCheck);
+library.add(faPlay, faPause, faUndo, faCheck, faTimes);
 
 export default {
     name: 'Chronometer',
@@ -127,5 +128,11 @@ export default {
 
 .actions > svg:last-child {
     color: var(--ion-color-success);
+}
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
 }
 </style>
