@@ -11,7 +11,7 @@
           <h1>{{ day.formattedDate }}</h1>
           <!-- TODO: Add activity cards -->
           <div class="cards">
-            <ion-card :v-for="activity in activitiesOfDay[day.int]"></ion-card>
+            <ion-card :key="activity.id" v-for="activity in activitiesOfDay[day.int]"></ion-card>
           </div>
           <ion-fab vertical="bottom" horizontal="bottom">
             <ion-fab-button>
@@ -25,12 +25,12 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSlides, IonSlide, IonFab, IonFabButton, IonCard} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSlides, IonSlide, IonFab, IonFabButton, IonCard, IonIcon} from '@ionic/vue';
 import { add } from 'ionicons/icons';
 
 export default  {
   name: 'Plan',
-  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSlides, IonSlide, IonFab, IonFabButton, IonCard},
+  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSlides, IonSlide, IonFab, IonFabButton, IonCard, IonIcon},
   setup() {
     return {add};
   },
@@ -42,7 +42,7 @@ export default  {
   },
   mounted() {
     this.findNextMonday();
-    this.setDefaultActivities();
+    this.getActivities();
   },
   methods: {
     findNextMonday(): void {
@@ -76,9 +76,12 @@ export default  {
     addActivity(day: number): void {
       console.log(day);
     },
-    setDefaultActivities() {
+    async getActivities() {
+      // Replace one by this.$store.state.user.userId
+      await this.$store.dispatch('activity/getActivities', 1);
+
       this.daysToPlan.forEach(day => {
-        this.activitiesOfDay[day.int] = [];
+        this.activitiesOfDay[day.int] = this.$store.getters['activity/getActivitiesFromDate'](day.int) ;
       })
     }
   }

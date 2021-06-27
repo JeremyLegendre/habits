@@ -9,7 +9,7 @@ interface User {
 }
 
 interface AuthState {
-  authUser: User | null;
+    authUser: User | null;
 }
 
 const state: AuthState = {
