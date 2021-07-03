@@ -69,7 +69,7 @@ export default  {
 
         this.daysToPlan.push({
           int: dayOfWeek.getDate(),
-          time: dayOfWeek.getTime() / 1000,
+          time: dayOfWeek.getTime(),
           formattedDate: dayOfWeek.toLocaleDateString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long'})
         });
       }

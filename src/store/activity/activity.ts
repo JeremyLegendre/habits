@@ -1,4 +1,4 @@
-import axios from 'axios';
+import activityService from '../../services/activity';
 
 interface Activity {
     id: number;
@@ -38,12 +38,14 @@ const getters = {
 const actions = {
     async getActivities({commit}, userId: number) {
         try {
-            const response = await axios.get(`http://www.localhost:8080/api/activities/${userId}`);
-            commit('setActivities', response.data);
+            const activities = await activityService.getActivities(userId);
+            if (activities) {
+                commit('setActivities', activities);
+            }
         } catch (error) {
             console.log(error)
         }
-    }
+    },
 };
 
 const mutations = {
