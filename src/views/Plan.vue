@@ -69,6 +69,7 @@ export default  {
 
         this.daysToPlan.push({
           int: dayOfWeek.getDate(),
+          time: dayOfWeek.getTime() / 1000,
           formattedDate: dayOfWeek.toLocaleDateString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long'})
         });
       }
@@ -81,8 +82,8 @@ export default  {
       await this.$store.dispatch('activity/getActivities', 1);
 
       this.daysToPlan.forEach(day => {
-        this.activitiesOfDay[day.int] = this.$store.getters['activity/getActivitiesFromDate'](day.int) ;
-      })
+        this.activitiesOfDay[day.int] = this.$store.getters['activity/getActivitiesFromDate'](day.time);
+      });
     }
   }
 }
