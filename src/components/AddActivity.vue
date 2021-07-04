@@ -9,7 +9,7 @@
     <div class="dates">
       <ion-item id="start-time">
         <ion-label>Commencer à </ion-label>
-        <ion-datetime display-format="h:mm A" picker-format="h:mm A" :value="activity.startDate" display-timezone="Europe/Paris"></ion-datetime>
+        <ion-datetime display-format="h:mm A" picker-format="h:mm A" :value="activity.date" display-timezone="Europe/Paris"></ion-datetime>
       </ion-item>
       <ion-item id="duration">
         <ion-label>Fin </ion-label>
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonCard, IonItem, IonDatetime, IonLabel } from '@ionic/vue';
+import { IonContent, IonCard, IonItem, IonDatetime, IonLabel, IonTitle } from '@ionic/vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -31,7 +31,7 @@ library.add(faCheck, faTimes);
 
 export default {
   name: "AddActivity",
-  components: { IonContent, IonCard, IonItem, IonDatetime, IonLabel, FontAwesomeIcon },
+  components: { IonContent, IonCard, IonItem, IonDatetime, IonLabel, IonTitle, FontAwesomeIcon },
   props: {
     day: {
       type: Object,
@@ -41,10 +41,9 @@ export default {
   data() {
     return {
       activity: {
-        parent: 0,
-        icon: "",
+        category: 0,
         name: "",
-        startDate: new Date(this.day.time).toString(),
+        date: new Date(this.day.time).toString(),
         endDate: new Date(this.day.time + 3600000).toString(),
         passedTime: 0,
         plannedTime: 3600000
@@ -62,12 +61,12 @@ export default {
       this.subCategories = this.$store.state.category.subCategories;
     },
     setCategory(category) {
-      this.activity.parent = category.id;
-      this.activity.name = category.name;
+      this.activity.category = category.id;
+      this.activity.name = category.name; // TODO: add possibility to edit activity title
     },
     async saveActivity() {
       if (this.activity.category) {
-        this.activity.plannedTime = this.activity.endDate - this.activity.startDate;
+        this.activity.plannedTime = this.activity.endDate - this.activity.date;
         const response = await activityService.postActivity(this.activity);
 
         this.$emit('saveAndClose', {
