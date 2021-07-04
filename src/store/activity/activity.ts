@@ -2,8 +2,7 @@ import activityService from '../../services/activity';
 
 interface Activity {
     id: number;
-    parent: number;
-    icon: string;
+    category: number;
     name: string;
     date: number;
     endDate: number;

@@ -18,7 +18,8 @@
         <div class="objective" v-for="(activity, index) in activities" :key="activity.id">
           <div class="hour"> {{ activity.date }} - {{ activity.endDate }}</div>
           <div class="program">
-            <objective-icon :icon="activity.icon" :type="activity.parent"/>
+            <!-- TODO: replace icon value by categoryIcon method-->
+            <objective-icon icon="dumbbell" :type="activity.category"/>
             <p> {{ activity.name }} </p>
             <ion-fab horizontal="end" :class="{'inactive': activity.passedTime >= activity.plannedTime}">
               <ion-fab-button size="small" :color="getBtnColorFromActivity(activity)">
@@ -71,8 +72,7 @@ interface State {
   today: string;
   activities: [{
     id: number;
-    parent: number;
-    icon: string;
+    category: number;
     name: string;
     date: string;
     endDate: string;
@@ -107,8 +107,7 @@ export default  {
         response: [
           {
             id: 3,
-            parent: 1,
-            icon: "dumbbell",
+            category: 1,
             name: "Musculation Abdos",
             date: new Date(2021, 2, 16, 10, 30, 0),
             plannedTime: 1800000,
@@ -116,8 +115,7 @@ export default  {
           },
                     {
             id: 2,
-            parent: 0,
-            icon: "book",
+            category: 0,
             name: "Lecture Isaac Asimov",
             date: new Date(2021, 2, 16, 16, 0, 0),
             plannedTime: 900000,
@@ -125,8 +123,7 @@ export default  {
           },
           {
             id: 0,
-            parent: 0,
-            icon: "book",
+            category: 0,
             name: "Lecture Nietzsche",
             date: new Date(2021, 2, 16, 8, 0, 0),
             plannedTime: 3600000,
@@ -142,8 +139,7 @@ export default  {
       const response = data.response.map((value) => {
         const newVal: any = {
           id: value.id,
-          parent: value.parent,
-          icon: value.icon,
+          category: value.category,
           name: value.name,
           plannedTime: value.plannedTime,
           passedTime: value.passedTime,
