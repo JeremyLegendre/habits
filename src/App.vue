@@ -13,6 +13,14 @@ export default defineComponent({
   components: {
     IonApp,
     IonRouterOutlet
+  },
+  mounted() {
+    this.getCategories();
+  },
+  methods: {
+    getCategories() {
+      this.$store.dispatch('category/getCategories');
+    }
   }
 });
 </script>

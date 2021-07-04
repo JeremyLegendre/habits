@@ -1,0 +1,82 @@
+<template>
+  <ion-content>
+    <font-awesome-icon class="close-modal" @click="$emit('cancel')" icon="times" />
+    <div class="categories">
+      <ion-card :key="category.id" v-for="category in categories">
+        <ion-title>{{ category.name }}</ion-title>
+      </ion-card>
+    </div>
+    <div class="dates">
+      <ion-item id="start-time">
+        <ion-label>Commencer à </ion-label>
+        <ion-datetime display-format="h:mm A" picker-format="h:mm A" :value="activity.startDate" display-timezone="Europe/Paris"></ion-datetime>
+      </ion-item>
+      <ion-item id="duration">
+        <ion-label>Fin </ion-label>
+        <ion-datetime display-format="h:mm A" picker-format="h:mm A" :value="activity.endDate" display-timezone="Europe/Paris"></ion-datetime>
+      </ion-item>
+    </div>
+    <font-awesome-icon icon="check" @click="saveActivity"/>
+  </ion-content>
+</template>
+
+<script lang="ts">
+import { IonContent, IonCard, IonItem, IonDatetime, IonLabel } from '@ionic/vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import activityService from '../services/activity';
+
+library.add(faCheck, faTimes);
+
+export default {
+  name: "AddActivity",
+  components: { IonContent, IonCard, IonItem, IonDatetime, IonLabel, FontAwesomeIcon },
+  props: {
+    day: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      activity: {
+        parent: 0,
+        icon: "",
+        name: "",
+        startDate: new Date(this.day.time).toString(),
+        endDate: new Date(this.day.time + 3600000).toString(),
+        passedTime: 0,
+        plannedTime: 3600000
+      },
+      categories: null,
+      subCategories: null
+    }
+  },
+  mounted() {
+    this.getCategories();
+  },
+  methods: {
+    getCategories() {
+      this.categories = this.$store.state.category.categories;
+      this.subCategories = this.$store.state.category.subCategories;
+    },
+    setCategory(category) {
+      this.activity.parent = category.id;
+      this.activity.name = category.name;
+    },
+    async saveActivity() {
+      if (this.activity.category) {
+        this.activity.plannedTime = this.activity.endDate - this.activity.startDate;
+        const response = await activityService.postActivity(this.activity);
+
+        this.$emit('saveAndClose', {
+          response: response
+        });
+      } else {
+        // TODO: display error msg
+      }
+    }
+  }
+}
+</script>
