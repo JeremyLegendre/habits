@@ -3,7 +3,7 @@
     <font-awesome-icon class="close-modal" @click="$emit('cancel')" icon="times" />
     <div class="categories">
       <ion-card :key="category.id" v-for="category in categories">
-        <ion-title>{{ category.name }}</ion-title>
+        <ion-title :class="{'selected': activity.category == category.id}" @click="activity.category = category.id">{{ category.title }}</ion-title>
       </ion-card>
     </div>
     <div class="dates">
@@ -79,3 +79,30 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.categories {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.categories ion-card {
+  height: 90px;
+  margin: 10px;
+  width: 43%;
+}
+
+.categories ion-card ion-title {
+  width: 100%;
+  padding: 0;
+  transition: all .3s;
+}
+
+ion-title.selected {
+  color: var(--ion-color-primary-contrast);
+  background-color: var(--ion-color-primary);
+}
+</style>
