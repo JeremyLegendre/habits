@@ -10,9 +10,9 @@ export default {
             return false;
         }
     },
-    async postActivity(activity) {
+    async postActivity(params: any) {
         try {
-            const response = await client().post('/activities/', activity);
+            const response = await client().post('/activities/', params);
             return response;
         } catch (error) {
             console.log(error);

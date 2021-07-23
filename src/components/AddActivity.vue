@@ -66,11 +66,16 @@ export default {
     },
     async saveActivity() {
       if (this.activity.category) {
-        // TODO: reformat date
-        const params = this.activity;
-        params.user = 1;
+        const activity = {
+          id: 1,
+          date: new Date(this.activity.date).getTime(),
+          category: this.activity.category,
+          name: this.activity.name,
+          plannedTime: this.activity.plannedTime,
+          passedTime: 0
+        };
 
-        const response = await activityService.postActivity(params);
+        const response = await activityService.postActivity(activity);
 
         this.$emit('saveAndClose', {
           response: response
