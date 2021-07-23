@@ -28,17 +28,17 @@ export default {
         classFromType() {
             let iconClass = "";
             switch(this.type) {
-                case 0:
-                 iconClass = 'cultural';
-                 break;
-                case 1:
-                 iconClass = 'sports';
-                break;
                 case 2:
-                 iconClass = 'work';
+                    iconClass = 'cultural';
+                    break;
+                case 1:
+                    iconClass = 'sports';
                 break;
                 case 3:
-                 iconClass = 'leisure';
+                    iconClass = 'work';
+                break;
+                case 4:
+                    iconClass = 'leisure';
                 break;
             }
 

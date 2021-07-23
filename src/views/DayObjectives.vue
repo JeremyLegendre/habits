@@ -18,7 +18,7 @@
         <div class="objective" v-for="(activity, index) in activities" :key="activity.id">
           <div class="hour"> {{ activity.date }} - {{ activity.endDate }}</div>
           <div class="program">
-            <objective-icon :icon="activity.icon" :type="activity.parent"/>
+            <objective-icon :icon="getCategoryIcon(activity.category)" :type="getCategoryType(activity.category)"/>
             <p> {{ activity.name }} </p>
             <ion-fab horizontal="end" :class="{'inactive': activity.passedTime >= activity.plannedTime}">
               <ion-fab-button size="small" :color="getBtnColorFromActivity(activity)">
@@ -71,8 +71,7 @@ interface State {
   today: string;
   activities: [{
     id: number;
-    parent: number;
-    icon: string;
+    category: number;
     name: string;
     date: string;
     endDate: string;
@@ -107,8 +106,7 @@ export default  {
         response: [
           {
             id: 3,
-            parent: 1,
-            icon: "dumbbell",
+            category: 6,
             name: "Musculation Abdos",
             date: new Date(2021, 2, 16, 10, 30, 0),
             plannedTime: 1800000,
@@ -116,8 +114,7 @@ export default  {
           },
                     {
             id: 2,
-            parent: 0,
-            icon: "book",
+            category: 5,
             name: "Lecture Isaac Asimov",
             date: new Date(2021, 2, 16, 16, 0, 0),
             plannedTime: 900000,
@@ -125,8 +122,7 @@ export default  {
           },
           {
             id: 0,
-            parent: 0,
-            icon: "book",
+            category: 5,
             name: "Lecture Nietzsche",
             date: new Date(2021, 2, 16, 8, 0, 0),
             plannedTime: 3600000,
@@ -142,8 +138,7 @@ export default  {
       const response = data.response.map((value) => {
         const newVal: any = {
           id: value.id,
-          parent: value.parent,
-          icon: value.icon,
+          category: value.category,
           name: value.name,
           plannedTime: value.plannedTime,
           passedTime: value.passedTime,
@@ -178,6 +173,24 @@ export default  {
       }
 
       return isCorrectIcon;
+    },
+    getCategoryIcon(categoryId) {
+      const icon = this.$store.getters['category/getCategory'](categoryId).icon;
+
+      return icon ? icon : "book";
+    },
+    getCategoryType(categoryId) {
+      let type = 0;
+      const category = this.$store.getters['category/getCategory'](categoryId);
+
+      if (category) {
+        if (category.parent == 0) {
+          type = category.id
+        } else {
+          type = category.parent
+        }
+      }
+      return type;
     },
     getBtnColorFromActivity(activity): string {
       return activity.passedTime >= activity.plannedTime ? "medium" : "primary";

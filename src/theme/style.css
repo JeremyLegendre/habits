@@ -1,8 +1,12 @@
 /* Pass to sass */
 #app {
     height: 100vh;
+    background-color: var(--habits-color-white);
 }
 
+ion-page {
+    background-color: var(--habits-color-white);
+}
 
 .my_account {
     text-align: center;
