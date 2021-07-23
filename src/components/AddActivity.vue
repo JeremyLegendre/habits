@@ -9,11 +9,11 @@
     <div class="dates">
       <ion-item id="start-time">
         <ion-label>Commencer à </ion-label>
-        <ion-datetime display-format="h:mm A" picker-format="h:mm A" :value="activity.date" display-timezone="Europe/Paris"></ion-datetime>
+        <ion-datetime display-format="h:mm A" picker-format="h:mm A" v-model="startDate" display-timezone="Europe/Paris"></ion-datetime>
       </ion-item>
       <ion-item id="duration">
         <ion-label>Fin </ion-label>
-        <ion-datetime display-format="h:mm A" picker-format="h:mm A" :value="activity.endDate" display-timezone="Europe/Paris"></ion-datetime>
+        <ion-datetime display-format="h:mm A" picker-format="h:mm A" v-model="endDate" display-timezone="Europe/Paris"></ion-datetime>
       </ion-item>
     </div>
     <font-awesome-icon icon="check" @click="saveActivity"/>
@@ -43,11 +43,11 @@ export default {
       activity: {
         category: 0,
         name: "",
-        date: new Date(this.day.time).toString(),
-        endDate: new Date(this.day.time + 3600000).toString(),
         passedTime: 0,
         plannedTime: 3600000
       },
+      startDate: new Date(this.day.time).toString(),
+      endDate: new Date(this.day.time + 3600000).toString(),
       categories: null,
       subCategories: null
     }
@@ -66,23 +66,33 @@ export default {
     },
     async saveActivity() {
       if (this.activity.category) {
+        const startDate = new Date(this.startDate);
+        const endDate = new Date(this.endDate);
         const activity = {
           id: 1,
-          date: new Date(this.activity.date).getTime(),
+          date: startDate.getTime(),
           category: this.activity.category,
           name: this.activity.name,
-          plannedTime: this.activity.plannedTime,
+          plannedTime: endDate.getTime() - startDate.getTime(),
           passedTime: 0
         };
 
         const response = await activityService.postActivity(activity);
-
+        await this.$store.dispatch('activity/getActivities', 1);
         this.$emit('saveAndClose', {
           response: response
         });
       } else {
         // TODO: display error msg
       }
+    }
+  },
+  watch: {
+    startDate(newValue) {
+      this.activity.plannedTime = new Date(this.endDate).getTime() - new Date(newValue).getTime();
+    },
+    endDate(newValue) {
+      this.activity.plannedTime = new Date(newValue).getTime() - new Date(this.startDate).getTime();
     }
   }
 }

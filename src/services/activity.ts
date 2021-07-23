@@ -4,7 +4,9 @@ export default {
     async getActivities(userId: number) {
         try {
             const response = await client().get(`/activities/${userId}`);
-            return response.data;
+
+            // order response.data by date
+            return response.data.sort((a, b) => a.date - b.date);
         } catch (error) {
             console.log(error);
             return false;

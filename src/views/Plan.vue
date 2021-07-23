@@ -10,7 +10,11 @@
         <ion-slide :key="day.int" v-for="day in daysToPlan">
           <h1>{{ day.formattedDate }}</h1>
           <div class="cards">
-            <ion-card :key="activity.id" v-for="activity in activitiesOfDay[day.int]"></ion-card>
+            <ion-card :key="activity.id" v-for="activity in activitiesOfDay[day.int]">
+              <h2>{{activity.name}}</h2>
+              <p> {{ startDate(activity) }} - {{ endDate(activity) }} </p>
+              <p>{{categoryName(activity.category)}}</p>
+            </ion-card>
           </div>
           <ion-fab vertical="bottom" horizontal="bottom">
             <ion-fab-button>
@@ -57,7 +61,6 @@ export default  {
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
 
-
       if (tomorrow.getDay() == 1) {
         this.setDaysToWeek(tomorrow);
       } else {
@@ -99,8 +102,20 @@ export default  {
       if (!response) {
         // Display error msg
       }
+    },
+    startDate(activity) {
+      const date = new Date(activity.date);
+      return date.getHours() + 'h' + date.getMinutes();
+    },
+    endDate(activity) {
+      const date = new Date(activity.endDate);
+      return date.getHours() + 'h' + date.getMinutes();
+    },
+    categoryName(id) {
+      const category = this.$store.getters['category/getCategory'](id);
+      return category ? category.title : '';
     }
-  }
+  },
 }
 </script>
 
@@ -112,5 +127,23 @@ ion-slides {
 ion-slides .swiper-wrapper {
   display: flex;
   flex-direction: column;
+}
+
+ion-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.cards {
+    width: 100%;
+    height: 80%;
+    overflow: scroll;
+}
+
+.cards ion-card {
+  width: 90%;
+  margin: 15px auto;
 }
 </style>
