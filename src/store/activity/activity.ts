@@ -25,8 +25,7 @@ const getters = {
     getActivitiesFromDate: (state) => (date) => {
         if (state.activities !== null && state.activities.length > 0) {
             return state.activities.filter((activity) => {
-                const dateDiff = Math.abs(date-activity.date);
-                return dateDiff < 86000000;
+                return activity.date > date && activity.date < (date + 86400000);
             });
         } else {
             return false;
