@@ -8,15 +8,15 @@
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title size="large"> {{ account.name }} </ion-title>
+          <ion-title size="large"> {{ user.name }} </ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-card class="account">
         <ion-avatar>
-          <img :src="account.image" alt="account_img">
+          <img :src="user.image" alt="account_img">
         </ion-avatar>
         <div class="cumulated_points">
-          <p> {{ account.points }} </p>
+          <p> {{ user.points }} </p>
           <p>Points cumulés</p>
         </div>
       </ion-card>
@@ -39,11 +39,15 @@
             <span class="points">{{topUsers[2].points}}</span>
           </div>
         </div>
+        <div>
+          <h3>Ma position</h3>
+          <p>Position {{userPosition}} avec {{user.points}}</p>
+        </div>
       </ion-card>
       <ion-card class="achievements">
         Achievements
       </ion-card>
-      <partial-analysis :userId="account.userId"></partial-analysis>
+      <partial-analysis :userId="user.id"></partial-analysis>
     </ion-content>
   </ion-page>
 </template>
@@ -59,30 +63,35 @@ export default defineComponent({
   components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCard, IonAvatar, PartialAnalysis },
   data(){
     return {
-      account: {
-        userId: 0,
+      user: {
+        id: 1,
         name: "",
         points: 0,
         achievements: [],
         image: ""
       },
-      topUsers: []
+      topUsers: [],
+      userPosition: 0,
     }
   },
   methods: {
-    getInformation() {
-      this.account.name = "Jérémy LEGENDRE";
-      this.account.points = 53;
-      this.account.image = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
+    async getInformation() {
+      await this.$store.dispatch('user/setUserInformations', 1);
+      this.user.name = this.$store.state.user.user.name;
+      this.user.points = this.$store.state.user.user.points;
+      this.user.image = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
     },
     async getTopUsers() {
       this.topUsers = await userService.getTopUsers();
-
-    }
+    },
+    async getUserPosition() {
+      this.userPosition = await userService.getUserPosition(this.user.id);
+    },
   },
   mounted() {
     this.getInformation();
     this.getTopUsers();
+    this.getUserPosition();
   }
 })
 </script>
