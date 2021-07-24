@@ -1,4 +1,4 @@
-import axios from 'axios';
+import userService from '../../services/user';
 
 interface User {
     userId: number;
@@ -9,29 +9,29 @@ interface User {
 }
 
 interface AuthState {
-    authUser: User | null;
+    user: User | null;
 }
 
 const state: AuthState = {
-    authUser: null,
+    user: null,
 };
 
 const getters = {
     getUser() {
-        return state.authUser;
+        return state.user;
     }
 };
 
 const actions = {
     async setUserInformations({commit}: any, userId: number) {
-        const response = await axios.get("http://www.localhost:8080/api/user/" + userId);
-        commit('setUserInformations', response.data);
+        const response = await userService.getUser(userId);
+        commit('setUserInformations', response);
     }
 };
 
 const mutations = {
     setUserInformations(state: AuthState, user: User) {
-        state.authUser = user;
+        state.user = user;
     }
 };
 
