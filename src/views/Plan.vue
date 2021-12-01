@@ -7,15 +7,9 @@
     </ion-header>
     <ion-content :fullscreen="true">
       <ion-slides>
-        <ion-slide :key="day.int" v-for="day in daysToPlan">
+        <ion-slide :key="day.time" v-for="day in daysToPlan">
           <h1>{{ day.formattedDate }}</h1>
-          <div class="cards">
-            <ion-card :key="activity.id" v-for="activity in activitiesOfDay[day.int]">
-              <h2>{{activity.name}}</h2>
-              <p> {{ startDate(activity) }} - {{ endDate(activity) }} </p>
-              <p>{{categoryName(activity.category)}}</p>
-            </ion-card>
-          </div>
+          <activity-list :date="day.time"></activity-list>
           <ion-fab vertical="bottom" horizontal="bottom">
             <ion-fab-button>
               <ion-icon :icon="add" @click="addActivity(day)"></ion-icon>
@@ -31,14 +25,15 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSlides, IonSlide, IonFab, IonFabButton, IonCard, IonModal, IonIcon} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonSlides, IonSlide, IonFab, IonFabButton, IonModal, IonIcon} from '@ionic/vue';
 import { add } from 'ionicons/icons';
 import { ref } from 'vue';
-import AddActivity from '../components/AddActivity.vue';
+import AddActivity from '@/components/AddActivity.vue';
+import ActivityList from '@/components/Activity/ActivityList.vue';
 
 export default  {
   name: 'Plan',
-  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSlides, IonSlide, IonFab, IonFabButton, IonCard, IonModal, IonIcon, AddActivity},
+  components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonSlides, IonSlide, IonFab, IonFabButton, IonModal, IonIcon, ActivityList, AddActivity},
   setup() {
     const isOpenRef = ref(false);
     const setOpen = (state: boolean) => { isOpenRef.value = state };
@@ -53,7 +48,6 @@ export default  {
   },
   mounted() {
     this.findNextMonday();
-    this.getActivities();
   },
   methods: {
     findNextMonday(): void {
@@ -62,6 +56,7 @@ export default  {
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       if (tomorrow.getDay() == 1) {
+        tomorrow.setHours(0,0,0,0);
         this.setDaysToWeek(tomorrow);
       } else {
         const nextMonday = new Date(tomorrow);
@@ -69,6 +64,7 @@ export default  {
           nextMonday.setTime(nextMonday.getTime() + 86400000);
         }
 
+        nextMonday.setHours(0,0,0,0);
         this.setDaysToWeek(nextMonday);
       }
     },
@@ -87,14 +83,6 @@ export default  {
     async addActivity(day) {
       this.day = day;
       this.setOpen(true);
-    },
-    async getActivities() {
-      // Replace one by this.$store.state.user.userId
-      await this.$store.dispatch('activity/getActivities', 1);
-
-      this.daysToPlan.forEach(day => {
-        this.activitiesOfDay[day.int] = this.$store.getters['activity/getActivitiesFromDate'](day.time);
-      });
     },
     saveActivity(response) {
       this.setOpen(false);

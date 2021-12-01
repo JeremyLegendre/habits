@@ -99,7 +99,18 @@ export default  {
       modal: "chrono"
     }
   },
+  setup() {
+    const isOpenRef = ref(false);
+    const setOpen = (state: boolean) => { isOpenRef.value = state };
+    return { isOpenRef, setOpen }
+  },
+  mounted() {
+    this.getActivities();
+  },
   methods: {
+    getActivities(): void {
+      this.activities = this.getDayOfWeek();
+    },
     getDayOfWeek(): any {
       // use today date
       const data = {
@@ -157,9 +168,6 @@ export default  {
       });
 
       return response;
-    },
-    getActivities(): void {
-      this.activities = this.getDayOfWeek();
     },
     isCorrectIcon(activity, type): boolean {
       let isCorrectIcon = false;
@@ -222,14 +230,6 @@ export default  {
       this.modal = "";
     }
   },
-  mounted() {
-    this.getActivities();
-  },
-  setup() {
-    const isOpenRef = ref(false);
-    const setOpen = (state: boolean) => { isOpenRef.value = state };
-    return { isOpenRef, setOpen }
-  }
 }
 </script>
 

@@ -77,11 +77,18 @@ export default {
           passedTime: 0
         };
 
-        const response = await activityService.postActivity(activity);
-        await this.$store.dispatch('activity/getActivities', 1);
-        this.$emit('saveAndClose', {
-          response: response
-        });
+        try {
+          const response = await activityService.postActivity(activity);
+
+          if (response) {
+            await this.$store.dispatch('activity/getActivities', 1);
+            this.$emit('saveAndClose', {
+              response: response
+            });
+          }
+        } catch(e) {
+          console.log(e);
+        }
       } else {
         // TODO: display error msg
       }

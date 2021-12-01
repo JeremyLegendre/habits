@@ -64,7 +64,7 @@ export default defineComponent({
   data(){
     return {
       user: {
-        id: 1,
+        id: 0,
         name: "",
         points: 0,
         achievements: [],
@@ -74,9 +74,14 @@ export default defineComponent({
       userPosition: 0,
     }
   },
+  mounted() {
+    this.getInformation();
+    this.getTopUsers();
+    this.getUserPosition();
+  },
   methods: {
     async getInformation() {
-      await this.$store.dispatch('user/setUserInformations', 1);
+      this.user.id = this.currentUserId;
       this.user.name = this.$store.state.user.user.name;
       this.user.points = this.$store.state.user.user.points;
       this.user.image = "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
@@ -88,11 +93,6 @@ export default defineComponent({
       this.userPosition = await userService.getUserPosition(this.user.id);
     },
   },
-  mounted() {
-    this.getInformation();
-    this.getTopUsers();
-    this.getUserPosition();
-  }
 })
 </script>
 
