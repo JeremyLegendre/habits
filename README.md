@@ -10,9 +10,25 @@
 
 Application mobile construite à partir d'Ionic VueJS, qui permet de planifier ses activités de la semaine. Le but est de pousser à accomplir le plus de tâches possible via un système compétitif et qui récompense l'utilisateur qui atteint ses objectifs.
 
+
+## Tips windows 
+
+Activer/Désactiver l'execution de scripts sur windows: 
+
+```
+ Set-ExecutionPolicy -Scope "CurrentUser" -ExecutionPolicy "Unrestricted|RemoteSigned"
+```
+
+Concernant npm (en mode superutilisateur): 
+```
+npm install --global --production windows-build-tools
+```
+
 ## VueJS | Ionic | Typescript | Babel
 
 Pour lancer le projet :
+
+Si c'est la première fois -> npm install 
 
 ```
 ionic serve
